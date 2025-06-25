@@ -11,6 +11,7 @@ public class Enigme2 : MonoBehaviour
         public string id; // exemple : "red", "blue"
         public Button startButton;
         public Button endButton;
+        public Image filConnecte;
         public bool isConnected = false;
     }
 
@@ -44,6 +45,8 @@ public class Enigme2 : MonoBehaviour
             cable.isConnected = true;
             cable.startButton.interactable = false;
             cable.endButton.interactable = false;
+            cable.filConnecte.gameObject.SetActive(true);
+
 
             CheckVictory();
         }
@@ -77,6 +80,7 @@ public class Enigme2 : MonoBehaviour
             cable.isConnected = false;
             cable.startButton.interactable = true;
             cable.endButton.interactable = true;
+            cable.filConnecte.gameObject.SetActive(false);
         }
     }
 }
