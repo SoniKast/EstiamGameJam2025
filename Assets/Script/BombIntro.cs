@@ -1,13 +1,14 @@
 ﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement; // 🔁 Nécessaire pour charger les scènes
 
 public class BombIntro : MonoBehaviour
 {
     [Header("Bombe")]
-    public Animator bombAnimator;                    // Animator de la bombe
-    public string explosionAnim = "Explosion";       // Nom de l’animation d’explosion
-    public string rewindAnim = "Explosion_Reverse";  // Nom de l’animation de rewind
+    public Animator bombAnimator;
+    public string explosionAnim = "Explosion";
+    public string rewindAnim = "Explosion_Reverse";
 
     [Header("Timing")]
     public float pauseBeforeExplosion = 1.0f;
@@ -16,28 +17,32 @@ public class BombIntro : MonoBehaviour
     public float pauseAfterReverse = 0.5f;
 
     [Header("Camera Shake")]
-    public CameraShake cameraShake;       // Script de shake de caméra
+    public CameraShake cameraShake;
     public float shakeDuration = 1.0f;
     public float shakeMagnitude = 0.4f;
 
     [Header("Glitch (UI Fullscreen)")]
-    public GameObject glitchCanvas;       // Canvas contenant glitch + flèche
-    public Animator glitchAnimator;       // Animator du glitch
-    public Image glitchImage;             // Image UI du glitch
+    public GameObject glitchCanvas;
+    public Animator glitchAnimator;
+    public Image glitchImage;
     public string glitchAnimation = "GlitchAnim";
     public float glitchAlpha = 0.5f;
     public float glitchFadeDuration = 0.3f;
 
     [Header("Flèche Rewind UI")]
-    public Image rewindIcon;              // Image de la double flèche
+    public Image rewindIcon;
     public float iconAlpha = 1f;
     public float iconFadeDuration = 0.3f;
+
+    [Header("Scène à charger")]
+    [Tooltip("Nom exact de la scène à charger après l'animation")]
+    public string nextSceneName;
 
     private bool hasStarted = false;
 
     void Start()
     {
-        // Masquer les visuels au démarrage (si jamais l’objet est actif dans l’éditeur)
+        // Cache UI au démarrage
         glitchCanvas.SetActive(false);
         SetImageAlpha(glitchImage, 0f);
         SetImageAlpha(rewindIcon, 0f);
@@ -54,17 +59,12 @@ public class BombIntro : MonoBehaviour
 
     IEnumerator PlayIntroSequence()
     {
-        // 1. Attente avant explosion
         yield return new WaitForSeconds(pauseBeforeExplosion);
 
-        // 2. Explosion + caméra shake
-        bombAnimator.Play(explosionAnim, 0, 0f); // Play depuis le début
+        bombAnimator.Play(explosionAnim, 0, 0f);
         StartCoroutine(cameraShake.Shake(shakeDuration, shakeMagnitude));
-
-        // Attendre la durée exacte de l’explosion avant de passer au rewind
         yield return new WaitForSeconds(explosionDuration);
 
-        // 3. Glitch + flèche (fade in)
         glitchCanvas.SetActive(true);
         float t = 0f;
 
@@ -83,13 +83,11 @@ public class BombIntro : MonoBehaviour
         SetImageAlpha(glitchImage, glitchAlpha);
         SetImageAlpha(rewindIcon, iconAlpha);
 
-        // 4. Rewind animations
-        glitchAnimator.Play(glitchAnimation, 0, 0f); // Jouer depuis 0
-        bombAnimator.Play(rewindAnim, 0, 0f); // Jouer depuis 0
+        glitchAnimator.Play(glitchAnimation, 0, 0f);
+        bombAnimator.Play(rewindAnim, 0, 0f);
 
         yield return new WaitForSeconds(rewindDuration);
 
-        // 5. Glitch + flèche (fade out)
         t = 0f;
         while (t < glitchFadeDuration)
         {
@@ -107,10 +105,8 @@ public class BombIntro : MonoBehaviour
         SetImageAlpha(rewindIcon, 0f);
         glitchCanvas.SetActive(false);
 
-        // 6. Pause après le rewind
         yield return new WaitForSeconds(pauseAfterReverse);
 
-        // 7. Démarrage du niveau
         StartLevel();
     }
 
@@ -124,8 +120,14 @@ public class BombIntro : MonoBehaviour
 
     void StartLevel()
     {
-        Debug.Log("🚀 Niveau lancé !");
-        // Tu peux ici charger la scène ou activer le gameplay
-        // Ex: SceneManager.LoadScene("NomDuNiveau");
+        if (!string.IsNullOrEmpty(nextSceneName))
+        {
+            Debug.Log($"🚀 Chargement de la scène : {nextSceneName}");
+            SceneManager.LoadScene(nextSceneName);
+        }
+        else
+        {
+            Debug.LogWarning("❗ Aucun nom de scène spécifié dans 'nextSceneName'.");
+        }
     }
 }
