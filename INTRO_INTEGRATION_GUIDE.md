@@ -1,5 +1,12 @@
 # Guide d'intégration de la scène d'intro
 
+## ✅ Intégration réussie !
+
+### Changements effectués :
+1. Les scripts de Quentin ont été déplacés dans Assets/Scripts/ (fusion des dossiers)
+2. IntroScene configurée pour charger SampleScene automatiquement
+3. Le flow intro → jeu fonctionne parfaitement
+
 ## Résumé du merge
 J'ai récupéré uniquement les fichiers essentiels de la branche de Quentin :
 - **Scripts d'intro** : BombIntro.cs, CharacterIntro.cs, CameraShake.cs

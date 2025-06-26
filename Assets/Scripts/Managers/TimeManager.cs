@@ -60,7 +60,7 @@ namespace EstiamGameJam2025
         private void Start()
         {
             // Cacher l'UI au départ
-            if (timerUI != null) timerUI.SetActive(false);
+            if (timerUI != null) timerUI.SetActive(true);
             if (rewindEffectUI != null) rewindEffectUI.SetActive(false);
             
             // S'abonner aux changements d'état
@@ -77,6 +77,15 @@ namespace EstiamGameJam2025
                 GameManager.Instance.CurrentState == GameState.Playing)
             {
                 RecordWorldState();
+            }
+            
+            // Debug - voir pourquoi isCountingDown devient false
+            if (!isCountingDown && currentTime > 0 && GameManager.Instance != null)
+            {
+                if (GameManager.Instance.CurrentState == GameState.Investigating && Time.frameCount % 60 == 0)
+                {
+                    Debug.LogWarning($"[TimeManager] Timer arrêté mais devrait tourner! État: {GameManager.Instance.CurrentState}, Temps: {currentTime:F1}");
+                }
             }
             
             // Gérer le compte à rebours
@@ -136,6 +145,11 @@ namespace EstiamGameJam2025
 
         private void UpdateCountdown()
         {
+            // Debug pour comprendre pourquoi le timer s'arrête
+            if (Time.deltaTime == 0)
+            {
+                Debug.LogWarning($"[TimeManager] Time.deltaTime = 0 ! TimeScale = {Time.timeScale}");
+            }
             currentTime -= Time.deltaTime;
             
             if (currentTime <= 0)
@@ -155,7 +169,6 @@ namespace EstiamGameJam2025
                 int minutes = Mathf.FloorToInt(currentTime / 60f);
                 int seconds = Mathf.FloorToInt(currentTime % 60f);
                 timerText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
-                
                 // Changer la couleur selon le temps restant
                 if (currentTime <= criticalThreshold)
                 {
@@ -265,6 +278,7 @@ namespace EstiamGameJam2025
 
         private void OnGameStateChanged(GameState newState)
         {
+            Debug.Log($"[TimeManager] État du jeu changé : {newState}");
             switch (newState)
             {
                 case GameState.Playing:
@@ -301,6 +315,8 @@ namespace EstiamGameJam2025
         
         public void PauseTimer()
         {
+            Debug.LogWarning($"[TimeManager] PauseTimer appelé! Temps actuel: {currentTime:F1}s");
+            Debug.LogWarning($"[TimeManager] Appelé par: {System.Environment.StackTrace}");
             isCountingDown = false;
         }
         

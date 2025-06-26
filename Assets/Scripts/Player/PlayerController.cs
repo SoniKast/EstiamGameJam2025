@@ -190,7 +190,16 @@ namespace EstiamGameJam2025
             isInteracting = true;
             Debug.Log("Interacting with: " + currentInteractable.name);
 
-            // Vérifier si c'est un déclencheur de mini-jeu
+            // Vérifier d'abord InteractableObject
+            InteractableObject interactableObj = currentInteractable.GetComponent<InteractableObject>();
+            if (interactableObj != null)
+            {
+                interactableObj.Interact();
+                StartCoroutine(Co_InteractionCooldown());
+                return;
+            }
+
+            // Sinon vérifier si c'est un déclencheur de mini-jeu
             MiniGameTrigger trigger = currentInteractable.GetComponent<MiniGameTrigger>();
             if (trigger != null)
             {

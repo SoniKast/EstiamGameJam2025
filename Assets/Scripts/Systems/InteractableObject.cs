@@ -110,8 +110,10 @@ namespace EstiamGameJam2025
             }
         }
         
-        void Interact()
+        public void Interact()
         {
+            if (hasBeenUsed && disableAfterUse) return;
+            
             Debug.Log($"Interaction avec {gameObject.name}");
             
             onInteract?.Invoke();
