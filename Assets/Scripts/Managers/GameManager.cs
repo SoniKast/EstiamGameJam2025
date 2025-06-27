@@ -27,11 +27,6 @@ namespace EstiamGameJam2025
                 if (_instance == null)
                 {
                     _instance = FindObjectOfType<GameManager>();
-                    if (_instance == null)
-                    {
-                        GameObject go = new GameObject("GameManager");
-                        _instance = go.AddComponent<GameManager>();
-                    }
                 }
                 return _instance;
             }
