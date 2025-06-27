@@ -1,15 +1,6 @@
-<<<<<<< HEAD
 {
   "version": "1.0",
   "components": [
     "Microsoft.VisualStudio.Workload.ManagedGame"
   ]
 }
-=======
-{
-  "version": "1.0",
-  "components": [
-    "Microsoft.VisualStudio.Workload.ManagedGame"
-  ]
-}
->>>>>>> origin/main

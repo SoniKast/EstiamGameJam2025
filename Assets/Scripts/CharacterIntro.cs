@@ -1,60 +1,70 @@
-using System.Collections;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class CharacterIntro : MonoBehaviour
 {
-    [Header("Déplacements")]
-    public Transform placePoint;              // Point où il pose la bombe
-    public Transform exitPoint;               // Point de sortie
+    [Header("DÃ©placements")]
+    public Transform placePoint;               // Point oÃ¹ il pose la bombe
+    public Transform exitPoint;                // Point de sortie
     public float moveSpeed = 2f;
 
-    [Header("Animation")]
-    public Animator animator;                 // Animator du personnage
+    [Header("Animations")]
+    public Animator animator;                  // Animator du personnage
     public string walkInAnim = "WalkIn";
     public string placeBombAnim = "PlaceBomb";
     public string walkOutAnim = "WalkOut";
 
     [Header("Bombe")]
-    public GameObject bombObject;             // GameObject de la bombe à activer
+    public GameObject bombObject;              // GameObject de la bombe (dÃ©sactivÃ© au dÃ©part)
 
     [Header("Lien avec BombIntro")]
-    public BombIntro bombIntro;               // Script BombIntro à appeler après la sortie
+    public BombIntro bombIntro;                // Script BombIntro (appelÃ© aprÃ¨s la sortie)
+
+    [Header("Audio")]
+    public AudioSource walkAudio;              // Bruit de pas
+    public AudioSource placeBombAudio;         // Son de pose de bombe
 
     void Start()
     {
-        // Désactive la bombe au démarrage
         if (bombObject != null)
-            bombObject.SetActive(false);
+            bombObject.SetActive(false);       // Cache la bombe au dÃ©but
 
         StartCoroutine(PlayIntro());
     }
 
     IEnumerator PlayIntro()
     {
-        // 1. Le personnage entre
+        // 1. EntrÃ©e du personnage
         animator.Play(walkInAnim);
+        if (walkAudio != null) walkAudio.Play();
+
         yield return MoveTo(placePoint.position);
 
-        // 2. Il s'arrête et place la bombe
+        if (walkAudio != null) walkAudio.Stop();
+
+        // 2. Pose de la bombe
         animator.Play(placeBombAnim);
-        yield return new WaitForSeconds(0.5f); // Laisse le temps à l'anim de commencer
 
-        // 3. Activation de la bombe
+        yield return new WaitForSeconds(0.4f); // Laisse le temps Ã  l'anim de commencer
+
+        // 3. Active la bombe
         if (bombObject != null)
-        {
-            bombObject.SetActive(true); // Active le GameObject contenant le script BombIntro
-        }
+            bombObject.SetActive(true);
 
-        yield return new WaitForSeconds(0.5f); // Laisse l'anim de pose se finir
+        yield return new WaitForSeconds(0.6f); // Fin de l'anim de pose
 
-        // 4. Il repart
+        // 4. Sortie du personnage
         animator.Play(walkOutAnim);
+        if (walkAudio != null) walkAudio.Play(); // Rejoue le son de marche
+
         yield return MoveTo(exitPoint.position);
 
-        // 5. Attendre qu’il sorte de la caméra (pour la mise en scène)
+        if (walkAudio != null) walkAudio.Stop();
+
+        // 5. Attente que le personnage sorte de lâ€™Ã©cran
         yield return WaitUntilOffscreen();
 
-        // 6. Lance la bombe (séquence explosion)
+        // 6. DÃ©clenchement de lâ€™explosion
         if (bombIntro != null)
             bombIntro.TriggerExplosionSequence();
     }
@@ -73,7 +83,7 @@ public class CharacterIntro : MonoBehaviour
         SpriteRenderer rend = GetComponentInChildren<SpriteRenderer>();
         if (rend == null)
         {
-            Debug.LogWarning("Aucun SpriteRenderer trouvé.");
+            Debug.LogWarning("Aucun SpriteRenderer trouvÃ©.");
             yield break;
         }
 

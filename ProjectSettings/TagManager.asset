@@ -5,10 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - IntroCharacter
-<<<<<<< HEAD
-=======
   - Interactable
->>>>>>> origin/main
   layers:
   - Default
   - TransparentFX
@@ -16,17 +13,10 @@ TagManager:
   - 
   - Water
   - UI
-<<<<<<< HEAD
-  - 
-  - 
-  - 
-  - 
-=======
   - Interactable
   - 
   - Player
   - Wall
->>>>>>> origin/main
   - 
   - 
   - 
