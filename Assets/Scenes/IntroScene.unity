@@ -898,7 +898,11 @@ MonoBehaviour:
   rewindIcon: {fileID: 1370289970}
   iconAlpha: 1
   iconFadeDuration: 2
+<<<<<<< HEAD
   nextSceneName: Scene 2
+=======
+  nextSceneName: SampleScene
+>>>>>>> origin/main
 --- !u!1 &2086645405
 GameObject:
   m_ObjectHideFlags: 0
