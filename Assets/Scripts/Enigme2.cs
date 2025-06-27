@@ -17,6 +17,9 @@ public class Enigme2 : MonoBehaviour
 
     public List<CablePoint> cables;
 
+    public AudioSource right;
+    public AudioSource wrong;
+
     private string selectedStartId = null;
 
     void Start()
@@ -68,12 +71,15 @@ public class Enigme2 : MonoBehaviour
         }
 
         Debug.Log("Tous les câbles sont connectés !");
+        right.Play();
         FindObjectOfType<GameUIManager>().OnEnigme2Completed();
     }
 
     void ResetAll()
     {
         selectedStartId = null;
+
+        wrong.Play();
 
         foreach (var cable in cables)
         {

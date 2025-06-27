@@ -6,6 +6,9 @@ public class Enigme3 : MonoBehaviour
     public Button[] buttons; // Boutons de 0 à 9 dans l'inspecteur, dans l'ordre
     private int currentIndex = 0;
 
+    public AudioSource right;
+    public AudioSource wrong;
+
     void Start()
     {
         // Ajout des listeners aux boutons
@@ -15,7 +18,7 @@ public class Enigme3 : MonoBehaviour
             buttons[i].onClick.AddListener(() => OnNumberClicked(value));
         }
 
-        ResetButtons();
+        //ResetButtons();
     }
 
     void OnNumberClicked(int number)
@@ -28,6 +31,7 @@ public class Enigme3 : MonoBehaviour
             if (currentIndex >= buttons.Length)
             {
                 Debug.Log("Énigme 3 réussie !");
+                right.Play();
                 FindObjectOfType<GameUIManager>().OnEnigme3Completed();
             }
         }
@@ -41,7 +45,9 @@ public class Enigme3 : MonoBehaviour
     void ResetButtons()
     {
         currentIndex = 0;
-        // Réactiver tous les boutons
+
+        wrong.Play();
+
         foreach (Button btn in buttons)
         {
             btn.interactable = true;

@@ -18,6 +18,7 @@ public class Enigme1 : MonoBehaviour
 
     public GameObject panel; // pour désactiver le panel quand c’est terminé
     public GameObject menu; // activer le panel du menu quand c'est terminé
+    public AudioSource right;
 
     void Update()
     {
@@ -30,6 +31,7 @@ public class Enigme1 : MonoBehaviour
         if (AllOn())
         {
             Debug.Log("Tous les interrupteurs sont activés !");
+            right.Play();
             panel.SetActive(false); // Ferme le mini-jeu
             FindObjectOfType<GameUIManager>().OnEnigme1Completed();
             // menu.SetActive(true); // Ouvre le menu
